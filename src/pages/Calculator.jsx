@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useRef } from "react";
 import Numbutton from "../components/Numbutton";
 import Mathbutton from "../components/Mathbutton";
+import Zerobutton from "../components/Zerobutton";
+import Inputfield from "../components/Inputfield";
 
 function Calculator() {
   const [result, setResult] = useState(0);
@@ -33,44 +35,74 @@ function Calculator() {
     e.preventDefault();
     setResult((prevVal) => prevVal * 0);
   };
+  const num = (e) => {
+    const clickedNumber = e.target.textContent;
+    const currentValue = inputRef.current.value;
+
+    // Prevent multiple decimals
+    if (clickedNumber === "." && inputRef.current.value.includes(".")) return;
+
+    // Prevent leading zero unless it's a decimal (e.g., "0.")
+    if (
+      clickedNumber === "0" &&
+      currentValue !== "."
+    ) {
+      inputRef.current.value = clickedNumber;
+      return;
+    }
+
+    // Prevent input like "01", "02", etc.
+  if (
+    currentValue.startsWith("0") &&
+    !currentValue.startsWith("0.") &&
+    clickedNumber !== "."
+  ) {
+    inputRef.current.value = clickedNumber;
+    return;
+  }
+
+    // Prevent multiple leading zeros
+  if (currentValue === "0" && clickedNumber !== ".") {
+    inputRef.current.value = clickedNumber;
+    return;
+  }
+
+  inputRef.current.value += clickedNumber;
+  };
+
   return (
-    <div className="flex flex-col gap-3 items-center mt-10">
-      <input className="border-orange-600 border-2 rounded-full px-8 py-2"
-        type="number"
-        placeholder="type a number"
-        ref={inputRef}
-      />
+    <div className="flex flex-col gap-3 py-10 items-center mt-10 bg-red-400 md:w-1/5 justify-center rounded-sm">
+      <Inputfield inputRef={inputRef} />
       <div className="flex gap-2">
-        <Mathbutton>delete</Mathbutton>
-        <Mathbutton>reset</Mathbutton>
-        <Mathbutton>.</Mathbutton>
-        <Mathbutton>/</Mathbutton>
+        <Mathbutton onClick={num}>.</Mathbutton>
+        <Mathbutton onClick={divide}>/</Mathbutton>
+        <Mathbutton onClick={resetInput}>del</Mathbutton>
+        <Mathbutton onClick={resetResult}>re</Mathbutton>
       </div>
       <div className="flex gap-2">
-        <Numbutton>1</Numbutton>
-        <Numbutton>2</Numbutton>
-        <Numbutton>3</Numbutton>
-        <Mathbutton>*</Mathbutton>
-      </div>
-
-      <div className="flex gap-2" >
-        <Numbutton>4</Numbutton>
-        <Numbutton>5</Numbutton>
-        <Numbutton>6</Numbutton>
-        <Mathbutton>+</Mathbutton>
+        <Mathbutton onClick={times}>*</Mathbutton>
+        <Numbutton onClick={num}>1</Numbutton>
+        <Numbutton onClick={num}>2</Numbutton>
+        <Numbutton onClick={num}>3</Numbutton>
       </div>
 
       <div className="flex gap-2">
-        <Numbutton>7</Numbutton>
-        <Numbutton>8</Numbutton>
-        <Numbutton>9</Numbutton>
-        <Mathbutton>-</Mathbutton>
+        <Mathbutton onClick={plus}>+</Mathbutton>
+        <Numbutton onClick={num}>4</Numbutton>
+        <Numbutton onClick={num}>5</Numbutton>
+        <Numbutton onClick={num}>6</Numbutton>
       </div>
 
       <div className="flex gap-2">
-        <Numbutton>00</Numbutton>
-        <Numbutton>000</Numbutton>
+        <Mathbutton onClick={minus}>-</Mathbutton>
+        <Numbutton onClick={num}>7</Numbutton>
+        <Numbutton onClick={num}>8</Numbutton>
+        <Numbutton onClick={num}>9</Numbutton>
+      </div>
+
+      <div className="flex gap-2">
         <Mathbutton>=</Mathbutton>
+        <Zerobutton onClick={num}>0</Zerobutton>
       </div>
     </div>
   );
