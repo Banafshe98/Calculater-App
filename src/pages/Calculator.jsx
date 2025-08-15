@@ -31,53 +31,26 @@ function Calculator() {
     e.preventDefault();
     inputRef.current.value = 0;
   };
-  const resetResult = () => {
+  const resetResult =(e)=>{
     e.preventDefault();
-    setResult((prevVal) => prevVal * 0);
-  };
+setResult((prevVal)=> prevVal * 0 )
+  }
   const num = (e) => {
     const clickedNumber = e.target.textContent;
     const currentValue = inputRef.current.value;
 
-    // Prevent multiple decimals
-    if (clickedNumber === "." && inputRef.current.value.includes(".")) return;
-
-    // Prevent leading zero unless it's a decimal (e.g., "0.")
-    if (
-      clickedNumber === "0" &&
-      currentValue !== "."
-    ) {
-      inputRef.current.value = clickedNumber;
-      return;
-    }
-
-    // Prevent input like "01", "02", etc.
-  if (
-    currentValue.startsWith("0") &&
-    !currentValue.startsWith("0.") &&
-    clickedNumber !== "."
-  ) {
-    inputRef.current.value = clickedNumber;
-    return;
-  }
-
-    // Prevent multiple leading zeros
-  if (currentValue === "0" && clickedNumber !== ".") {
-    inputRef.current.value = clickedNumber;
-    return;
-  }
-
+  // Append the clicked number
   inputRef.current.value += clickedNumber;
   };
 
   return (
     <div className="flex flex-col gap-3 py-10 items-center mt-10 bg-red-400 md:w-1/5 justify-center rounded-sm">
       <Inputfield inputRef={inputRef} />
+      <p ref={ResultRef}>{result}</p>
       <div className="flex gap-2">
-        <Mathbutton onClick={num}>.</Mathbutton>
         <Mathbutton onClick={divide}>/</Mathbutton>
-        <Mathbutton onClick={resetInput}>del</Mathbutton>
         <Mathbutton onClick={resetResult}>re</Mathbutton>
+        <Mathbutton onClick={resetInput}>del</Mathbutton>
       </div>
       <div className="flex gap-2">
         <Mathbutton onClick={times}>*</Mathbutton>
@@ -101,7 +74,6 @@ function Calculator() {
       </div>
 
       <div className="flex gap-2">
-        <Mathbutton>=</Mathbutton>
         <Zerobutton onClick={num}>0</Zerobutton>
       </div>
     </div>
